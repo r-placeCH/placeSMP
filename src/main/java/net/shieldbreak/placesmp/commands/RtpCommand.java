@@ -39,9 +39,13 @@ public class RtpCommand implements CommandExecutor {
         for (int y = maxY - 1; y >= 0; y--) {
             Location location = new Location(world, x, y, z);
             Block block = location.getBlock();
-            if (!block.isEmpty()) {
+            if (block.getType() == Material.WATER) {
+                getHighestBlockY(world,x,z);
+            }
+            if (block.getType() == Material.AIR) {
                 return y;
             }
+
         }
         return 0;
     }
