@@ -29,7 +29,7 @@ public class RtpCommand implements CommandExecutor {
         if (args.length != 0) return false;
 
         teleport(player);
-        player.sendMessage(Main.prefix + "§7Du wurdest an einen zufälligen ort teleportiert");
+        player.sendMessage(Main.prefix + "§7Du wurdest an einen zufälligen Ort teleportiert");
 
         return false;
     }
@@ -46,29 +46,48 @@ public class RtpCommand implements CommandExecutor {
         return 0;
     }
 
-    private Block getHighestBlock(World world, int x, int z) {
-        int maxY = world.getMaxHeight();
-        for (int y = maxY - 1; y >= 0; y--) {
-            Location location = new Location(world, x, y, z);
-            Block block = location.getBlock();
-            if (!block.isEmpty()) {
-                return block;
-            }
-        }
-        return null;
+
+
+    private static boolean isSafe(Location location) {
+        World world = location.getWorld();
+
+        Block legs = world.getBlockAt(location);
+        Block below = world.getBlockAt(location.add(0, -1, 0));
+        Block above = world.getBlockAt(location.add(0, 2, 0));
+
+        return below.getType().isSolid()
+                && below.getType().isOccluding()
+                && (above.getType() == Material.AIR)
+                && (legs.getType() == Material.AIR);
+    }
+
+    private static Location getRandomLocation(World world, int radius, Location centre) {
+        int maxX = centre.getBlockX() + radius;
+        int minX = centre.getBlockX() - radius;
+
+        int maxZ = centre.getBlockZ() + radius;
+        int minZ = centre.getBlockZ() - radius;
+
+        Random r = new Random();
+
+        int ix = r.nextInt(Math.max(Math.abs(maxX - minX), 1)) + minX;
+        double x = ix + 0.5;
+        int iz = r.nextInt(Math.max(Math.abs(maxZ - minZ), 1)) + minZ;
+        double z = iz + 0.5;
+
+        return new Location(world, x, world.getHighestBlockYAt(ix, iz), z);
     }
 
     private void teleport(Player player){
-        int x = Integer.parseInt(String.valueOf(new Random().nextInt(10000 - 500 + 1) + 500));
-        int z = Integer.parseInt(String.valueOf(new Random().nextInt(10000 - 500 + 1) + 500));
 
-        if (getHighestBlock(Bukkit.getWorld("smp"), x, z).getType().equals(Material.WATER)) {
-            teleport(player);
-        }
 
-        player.teleport(new Location(Bukkit.getWorld("smp"),
+        Location playerTpLocation = getRandomLocation(Bukkit.getWorld("world"),10000,new Location(Bukkit.getWorld("world",0,0,));
+
+        //System.out.println(checkWater(player));
+
+        player.teleport(new Location(Bukkit.getWorld("world"),
                 x,
-                getHighestBlockY(Bukkit.getWorld("smp"), x, z),
+                getHighestBlockY(Bukkit.getWorld("world"), x, z) + 1,
                 z));
     }
 
