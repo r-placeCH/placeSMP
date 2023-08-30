@@ -12,6 +12,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
@@ -385,8 +386,8 @@ public class Listeners implements Listener {
         }
     }
     @EventHandler
-    public void playerDamageEvent(EntityDamageEvent e) {
-        if (e.getEntity() instanceof Player) {
+    public void playerDamageEvent(EntityDamageByEntityEvent e) {
+        if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
             if (((Player) e.getEntity()).getPlayer().getWorld().equals("place")){
                 e.setCancelled(true);
             }
