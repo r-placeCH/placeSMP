@@ -1,0 +1,19 @@
+name: placeSMP
+version: '${project.version}'
+main: net.shieldbreak.placesmp.Main
+api-version: 1.19
+commands:
+  credits:
+
+  discord:
+
+  spawn:
+
+
+  web:
+
+  place:
+
+  smp:
+
+  canvas:
