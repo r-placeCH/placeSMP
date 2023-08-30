@@ -9,6 +9,8 @@ public final class Main extends JavaPlugin {
 
 
     private static Main instance;
+
+    public static String prefix = "§c§lr/place§f§lCH §8» ";
     @Override
     public void onEnable() {
         instance = this;
@@ -19,21 +21,16 @@ public final class Main extends JavaPlugin {
         getCommand("place").setExecutor(new PlaceCommand());
         getCommand("smp").setExecutor(new SmpCommand());
         getCommand("canvas").setExecutor(new MapCommand());
-
-
+        getCommand("rtp").setExecutor(new RtpCommand());
 
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new Listeners(),this);
-
     }
 
     @Override
     public void onDisable() {
-        // Plugin shutdown logic
+        instance = null;
     }
-
-
-    public static String prefix = "§c§lr/place§7§lCH §8§l|";
 
     public static String getPrefix() {
         return prefix;

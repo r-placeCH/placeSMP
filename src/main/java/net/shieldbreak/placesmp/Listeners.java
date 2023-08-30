@@ -1,5 +1,7 @@
 package net.shieldbreak.placesmp;
 
+import net.md_5.bungee.api.ChatMessageType;
+import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
@@ -17,12 +19,14 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
 public class Listeners implements Listener {
 
 
+    private static ArrayList<Player> delayedPlayers = new ArrayList<Player>();
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
@@ -314,6 +318,13 @@ public class Listeners implements Listener {
         if(e.getPlayer() instanceof Player) {
             if(e.getPlayer().getWorld().getName().equals("place")) {
                 if (e.getBlockPlaced().getY() == 61) {
+
+                    if (delayedPlayers.contains(e.getPlayer())){
+                        e.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§7« §6Du kannst für 5 sekunden keinen block platzieren §7»"));
+                        e.setCancelled(true);
+                        return;
+                    }
+
                     Material blockMaterialToPlace = e.getBlock().getType();
                     if(!(materials.contains(blockMaterialToPlace))) {
                         Location blockLocationToPlace = new Location(Bukkit.getWorld("place"), e.getBlockPlaced().getX(), e.getBlockPlaced().getY() - 1, e.getBlockPlaced().getZ());
@@ -323,6 +334,23 @@ public class Listeners implements Listener {
                         itemInHand.setAmount(itemInHand.getAmount() - 1);
                         player.getInventory().setItemInMainHand(itemInHand);
                         e.setCancelled(true);
+
+                        Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), new Runnable() {
+                            @Override
+                            public void run() {
+                                Player eventPlayer = e.getPlayer();
+                                delayedPlayers.add(eventPlayer);
+
+                                try {
+                                    Thread.sleep(5000);
+                                } catch (InterruptedException ex) {
+                                    throw new RuntimeException(ex);
+                                }
+
+                                delayedPlayers.remove(eventPlayer);
+                            }
+                        });
+
                     } else {
                     e.getPlayer().sendMessage(Main.getPrefix() + " §cDu darfst diesen Block nicht platzieren!");
                     e.setCancelled(true);

@@ -4,16 +4,17 @@ main: net.shieldbreak.placesmp.Main
 api-version: 1.19
 commands:
   credits:
-
   discord:
-
   spawn:
-
-
   web:
-
+    aliases:
+      - website
   place:
-
   smp:
-
   canvas:
+    aliases:
+      - map
+  rtp:
+    aliases:
+      - randomtp
+      - randomteleport

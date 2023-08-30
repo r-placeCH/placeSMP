@@ -8,22 +8,15 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 public class PlaceCommand implements CommandExecutor {
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Player player = (Player) sender;
-        player.sendActionBar("§aDu wirst in 5 Sekunden Teleportiert...");
-        Bukkit.getScheduler().runTaskLater(Main.getInstance(), new Runnable() {
-            public void run() {
-                World world = Bukkit.getWorld("place");
-                Location loc = new Location(world,0,62,0);
-                player.teleport(loc);
-                player.sendActionBar("§aErfolgreich teleportiert!");
-            }
-        }, 5 * 20L);
+
+        player.teleport(new Location(Bukkit.getWorld("place"), 0, 62, 0));
+
         return false;
     }
 }
