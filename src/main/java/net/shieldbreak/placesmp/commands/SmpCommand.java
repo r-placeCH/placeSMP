@@ -15,7 +15,7 @@ public class SmpCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Player player = (Player) sender;
 
-        player.teleport(new Location(Bukkit.getWorld("SMP"), 3.5, 137, 1.5));
+        player.teleport(new Location(Bukkit.getWorld("SMP"), 3.5, 137, 1.5, 180 ,0));
 
         return false;
     }

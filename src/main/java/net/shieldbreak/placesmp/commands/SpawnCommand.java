@@ -18,7 +18,7 @@ public class SpawnCommand implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         Player player = (Player) sender;
 
-        player.teleport(new Location(Bukkit.getWorld("world"), 0.5, 137, 0.5));
+        player.teleport(new Location(Bukkit.getWorld("world"), 0.5, 136, 0.5,-90,0));
 
         return false;
     }
