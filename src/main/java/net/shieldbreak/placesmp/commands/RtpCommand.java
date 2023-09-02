@@ -85,7 +85,7 @@ public class RtpCommand implements CommandExecutor {
     private void teleport(Player player){
 
 
-        Location playerTpLocation = getRandomLocation(Bukkit.getWorld("world"),10000,new Location(Bukkit.getWorld("world"),0,0,0));
+        Location playerTpLocation = getRandomLocation(Bukkit.getWorld("smp"),10000,new Location(Bukkit.getWorld("smp"),0,137,0));
 
         //System.out.println(checkWater(player));
 
