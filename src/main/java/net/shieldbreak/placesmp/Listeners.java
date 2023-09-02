@@ -60,7 +60,7 @@ public class Listeners implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        e.setJoinMessage(Main.prefix + " §a+ "+e.getPlayer().getName());
+
         if(!(e.getPlayer().hasPlayedBefore())) {
             Location loc = new Location(Bukkit.getWorld("world"),0.5,137,0.5);
             e.getPlayer().teleport(loc);
@@ -77,13 +77,11 @@ public class Listeners implements Listener {
 
         Player player = e.getPlayer();
 
-        if (isWhitelisted(player)){
-            if (Bukkit.getWhitelistedPlayers().contains(player)) return;
-            player.setWhitelisted(true);
-        } else {
-            if (Bukkit.getWhitelistedPlayers().contains(player)) player.setWhitelisted(false);
-            e.setJoinMessage("");
+        if (!isWhitelisted(player)){
+            e.setJoinMessage(Main.prefix + " §a+ "+e.getPlayer().getName());
             player.kickPlayer("§c§lYou are not whitelisted on this server!\n\n§7You can get whitelisted by joining our discord \nand sending your name into the whitelist channel.\n\n§9discord.r-place.ch");
+        } else {
+            e.setJoinMessage(null);
         }
 
     }
