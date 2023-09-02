@@ -1,5 +1,7 @@
 package net.shieldbreak.placesmp;
 
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
 import org.bukkit.Bukkit;
@@ -19,6 +21,10 @@ import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,7 +33,30 @@ import java.util.Objects;
 public class Listeners implements Listener {
 
 
-    private static ArrayList<Player> delayedPlayers = new ArrayList<Player>();
+    private static final ArrayList<Player> delayedPlayers = new ArrayList<Player>();
+
+    private boolean isWhitelisted(Player player) {
+        try {
+            String endpoint = "https://wireway.ch/api/placeMC/check/?username=" + player.getName();
+            URL url = new URL(endpoint);
+
+            HttpURLConnection con = (HttpURLConnection) url.openConnection();
+            con.setRequestMethod("GET");
+
+            BufferedReader in = new BufferedReader(new InputStreamReader(con.getInputStream()));
+            String response = in.readLine();
+            in.close();
+
+            JsonParser parser = new JsonParser();
+            JsonObject json = parser.parse(response).getAsJsonObject();
+            boolean result = json.get("result").getAsBoolean();
+
+            return result;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
@@ -43,6 +72,20 @@ public class Listeners implements Listener {
             inv.setItem(4, new ItemStack(Material.COOKED_BEEF));
             Objects.requireNonNull(inv.getItem(4)).setAmount(32);
         }
+
+        //////////////////////// whitelist check ////////////////////////
+
+        Player player = e.getPlayer();
+
+        if (isWhitelisted(player)){
+            if (Bukkit.getWhitelistedPlayers().contains(player)) return;
+            player.setWhitelisted(true);
+        } else {
+            if (Bukkit.getWhitelistedPlayers().contains(player)) player.setWhitelisted(false);
+            e.setJoinMessage("");
+            player.kickPlayer("§c§lYou are not whitelisted on this server!\n\n§7You can get whitelisted by joining our discord \nand sending your name into the whitelist channel.\n\n§9discord.r-place.ch");
+        }
+
     }
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {

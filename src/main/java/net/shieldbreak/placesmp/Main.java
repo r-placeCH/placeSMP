@@ -9,11 +9,12 @@ public final class Main extends JavaPlugin {
 
 
     private static Main instance;
-
     public static String prefix = "§c§lr/place§f§lCH §8» ";
+
     @Override
     public void onEnable() {
         instance = this;
+
         getCommand("spawn").setExecutor(new SpawnCommand());
         getCommand("web").setExecutor(new WebCommand());
         getCommand("discord").setExecutor(new DiscordCommand());
@@ -24,7 +25,7 @@ public final class Main extends JavaPlugin {
         getCommand("rtp").setExecutor(new RtpCommand());
 
         PluginManager pm = Bukkit.getPluginManager();
-        pm.registerEvents(new Listeners(),this);
+        pm.registerEvents(new Listeners(), this);
     }
 
     @Override
@@ -36,7 +37,7 @@ public final class Main extends JavaPlugin {
         return prefix;
     }
 
-    public static Main getInstance(){
+    public static Main getInstance() {
         return instance;
     }
 }
