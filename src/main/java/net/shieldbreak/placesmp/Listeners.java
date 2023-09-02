@@ -60,9 +60,8 @@ public class Listeners implements Listener {
 
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
-        e.setJoinMessage(Main.prefix + " §a+ "+e.getPlayer().getName());
-        if(!(e.getPlayer().hasPlayedBefore())) {
-            Location loc = new Location(Bukkit.getWorld("world"),0.5,137,0.5);
+        if (!(e.getPlayer().hasPlayedBefore())) {
+            Location loc = new Location(Bukkit.getWorld("world"), 0.5, 137, 0.5);
             e.getPlayer().teleport(loc);
             Inventory inv = e.getPlayer().getInventory();
             inv.setItem(0, new ItemStack(Material.STONE_SWORD));
@@ -77,30 +76,35 @@ public class Listeners implements Listener {
 
         Player player = e.getPlayer();
 
-        if (isWhitelisted(player)){
-            if (Bukkit.getWhitelistedPlayers().contains(player)) return;
-            player.setWhitelisted(true);
-        } else {
-            if (Bukkit.getWhitelistedPlayers().contains(player)) player.setWhitelisted(false);
+        if (!isWhitelisted(player)) {
             e.setJoinMessage("");
             player.kickPlayer("§c§lYou are not whitelisted on this server!\n\n§7You can get whitelisted by joining our discord \nand sending your name into the whitelist channel.\n\n§9discord.r-place.ch");
+        } else {
+            e.setJoinMessage(Main.prefix + " §a+ " + e.getPlayer().getName());
         }
 
     }
+
     @EventHandler
     public void onQuit(PlayerQuitEvent e) {
-        e.setQuitMessage(Main.prefix + " §a- "+e.getPlayer().getName());
+        if (!isWhitelisted(e.getPlayer())) {
+            e.setQuitMessage("");
+        } else {
+            e.setQuitMessage(Main.prefix + " §a- " + e.getPlayer().getName());
+        }
     }
+
     @EventHandler
     public void playerDeathEvent(PlayerDeathEvent e) {
         if (e.getEntity() instanceof Player) {
-            e.setDeathMessage("§c☠ §7"+e.getEntity().getPlayer().getName());
+            e.setDeathMessage("§c☠ §7" + e.getEntity().getPlayer().getName());
         }
     }
+
     @EventHandler(priority = EventPriority.HIGHEST)
     public void playerRespawnEvent(PlayerRespawnEvent e) {
-        e.setRespawnLocation(new Location(Bukkit.getWorld("world"),0.5,137,0.5));
-        e.getPlayer().teleport(new Location(Bukkit.getWorld("world"),0.5,137,0.5));
+        e.setRespawnLocation(new Location(Bukkit.getWorld("world"), 0.5, 137, 0.5));
+        e.getPlayer().teleport(new Location(Bukkit.getWorld("world"), 0.5, 137, 0.5));
     }
 
 
@@ -354,23 +358,23 @@ public class Listeners implements Listener {
 
         // TNT
         materials.add(Material.TNT);
-        if(e.getPlayer().getWorld().getName().equals("world") && !(e.getPlayer().getGameMode() == GameMode.CREATIVE)) {
+        if (e.getPlayer().getWorld().getName().equals("world") && !(e.getPlayer().getGameMode() == GameMode.CREATIVE)) {
 
             e.setCancelled(true);
         }
 
-        if(e.getPlayer() instanceof Player) {
-            if(e.getPlayer().getWorld().getName().equals("place")) {
+        if (e.getPlayer() instanceof Player) {
+            if (e.getPlayer().getWorld().getName().equals("place")) {
                 if (e.getBlockPlaced().getY() == 61) {
 
-                    if (delayedPlayers.contains(e.getPlayer())){
+                    if (delayedPlayers.contains(e.getPlayer())) {
                         e.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§7« §6Du kannst für 5 sekunden keinen block platzieren §7»"));
                         e.setCancelled(true);
                         return;
                     }
 
                     Material blockMaterialToPlace = e.getBlock().getType();
-                    if(!(materials.contains(blockMaterialToPlace))) {
+                    if (!(materials.contains(blockMaterialToPlace))) {
                         Location blockLocationToPlace = new Location(Bukkit.getWorld("place"), e.getBlockPlaced().getX(), e.getBlockPlaced().getY() - 1, e.getBlockPlaced().getZ());
                         blockLocationToPlace.getBlock().setType(blockMaterialToPlace);
                         Player player = e.getPlayer();
@@ -396,8 +400,8 @@ public class Listeners implements Listener {
                         });
 
                     } else {
-                    e.getPlayer().sendMessage(Main.getPrefix() + " §cDu darfst diesen Block nicht platzieren!");
-                    e.setCancelled(true);
+                        e.getPlayer().sendMessage(Main.getPrefix() + " §cDu darfst diesen Block nicht platzieren!");
+                        e.setCancelled(true);
                     }
                 } else {
                     e.setCancelled(true);
@@ -405,13 +409,14 @@ public class Listeners implements Listener {
             }
         }
     }
+
     @EventHandler
     public void onCanvasBreak(BlockBreakEvent e) {
-        if(e.getPlayer() instanceof Player) {
-            if(e.getPlayer().getWorld().getName().equals("place")) {
+        if (e.getPlayer() instanceof Player) {
+            if (e.getPlayer().getWorld().getName().equals("place")) {
                 e.setCancelled(true);
             }
-            if(e.getPlayer().getWorld().getName().equals("world") && !(e.getPlayer().getGameMode() == GameMode.CREATIVE)) {
+            if (e.getPlayer().getWorld().getName().equals("world") && !(e.getPlayer().getGameMode() == GameMode.CREATIVE)) {
 
                 e.setCancelled(true);
             }
@@ -419,7 +424,7 @@ public class Listeners implements Listener {
     }
 
     @EventHandler
-    public void worldChange(PlayerChangedWorldEvent e){
+    public void worldChange(PlayerChangedWorldEvent e) {
         if (e.getPlayer().getWorld().getName().equals("place")) {
             e.getPlayer().setFlySpeed(0.3F);
             e.getPlayer().setFlying(true);
@@ -428,13 +433,14 @@ public class Listeners implements Listener {
             e.getPlayer().setFlying(false);
         }
     }
+
     @EventHandler
     public void playerDamageEvent(EntityDamageByEntityEvent e) {
         if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
-            if (((Player) e.getEntity()).getPlayer().getWorld().equals("place")){
+            if (((Player) e.getEntity()).getPlayer().getWorld().equals("place")) {
                 e.setCancelled(true);
             }
-            if (((Player) e.getEntity()).getPlayer().getWorld().equals("world")){
+            if (((Player) e.getEntity()).getPlayer().getWorld().equals("world")) {
                 e.setCancelled(true);
             }
         }
