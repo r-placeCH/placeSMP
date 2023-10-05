@@ -425,11 +425,13 @@ public class Listeners implements Listener {
     @EventHandler
     public void worldChange(PlayerChangedWorldEvent e){
         if (e.getPlayer().getWorld().getName().equals("place")) {
-            e.getPlayer().setFlySpeed(0.3F);
+            e.getPlayer().setAllowFlight(true);
             e.getPlayer().setFlying(true);
+            e.getPlayer().setFlySpeed(0.3F);
         } else {
-            e.getPlayer().setFlySpeed(0.1F);
+            e.getPlayer().setAllowFlight(false);
             e.getPlayer().setFlying(false);
+            e.getPlayer().setFlySpeed(0.1F);
         }
     }
 
