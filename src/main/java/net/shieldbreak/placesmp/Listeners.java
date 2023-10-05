@@ -432,13 +432,16 @@ public class Listeners implements Listener {
             e.getPlayer().setFlying(false);
         }
     }
+
     @EventHandler
     public void playerDamageEvent(EntityDamageByEntityEvent e) {
+        Player player = (Player) e.getEntity();
         if (e.getEntity() instanceof Player && e.getDamager() instanceof Player) {
-            if (((Player) e.getEntity()).getPlayer().getWorld().equals("place")){
+            System.out.println("damage");
+            if ((player.getWorld().getName().equals("place"))){
                 e.setCancelled(true);
             }
-            if (((Player) e.getEntity()).getPlayer().getWorld().equals("world")){
+            if ((player.getWorld().getName().equals("world"))){
                 e.setCancelled(true);
             }
         }
