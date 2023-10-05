@@ -79,7 +79,12 @@ public class RtpCommand implements CommandExecutor {
         int iz = r.nextInt(Math.max(Math.abs(maxZ - minZ), 1)) + minZ;
         double z = iz + 0.5;
 
-        return new Location(world, x, world.getHighestBlockYAt(ix, iz), z);
+        if(isSafe(new Location(world, x, world.getHighestBlockYAt(ix, iz), z))) {
+            return new Location(world, x, world.getHighestBlockYAt(ix, iz), z);
+        } else {
+            return getRandomLocation(world, radius, centre);
+        }
+
     }
 
     private void teleport(Player player){
