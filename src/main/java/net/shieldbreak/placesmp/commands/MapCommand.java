@@ -11,7 +11,7 @@ public class MapCommand implements CommandExecutor {
     public boolean onCommand( CommandSender sender,  Command command,  String label,  String[] args) {
         if (args.length != 0) return false;
 
-        sender.sendMessage(Main.prefix + "§7Hier findest du die map §ahttps://map.r-place.ch");
+        sender.sendMessage(Main.prefix + "§7Here you can find the map §ahttps://map.r-place.ch");
 
         return false;
     }

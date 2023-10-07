@@ -15,7 +15,8 @@ public final class Main extends JavaPlugin {
     public void onEnable() {
         instance = this;
 
-        getCommand("spawn").setExecutor(new SpawnCommand());
+        saveDefaultConfig();
+
         getCommand("web").setExecutor(new WebCommand());
         getCommand("discord").setExecutor(new DiscordCommand());
         getCommand("credits").setExecutor(new CreditsCommand());
@@ -23,6 +24,7 @@ public final class Main extends JavaPlugin {
         getCommand("smp").setExecutor(new SmpCommand());
         getCommand("canvas").setExecutor(new MapCommand());
         getCommand("rtp").setExecutor(new RtpCommand());
+        getCommand("toggleworlds").setExecutor(new ToggleWorldsCommand());
 
         PluginManager pm = Bukkit.getPluginManager();
         pm.registerEvents(new Listeners(), this);

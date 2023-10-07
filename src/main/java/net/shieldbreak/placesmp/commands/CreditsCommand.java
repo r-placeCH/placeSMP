@@ -14,7 +14,7 @@ public class CreditsCommand implements CommandExecutor {
 
         sender.sendMessage("");
         sender.sendMessage("§9obvTiger §7• §cPlugins §8»§a §7https://obvtiger.ch");
-        sender.sendMessage("§x§6§2§0§0§f§fPandaDEV §7• §cPlugins §8» §7https://pandadev.tk");
+        sender.sendMessage("§x§6§2§0§0§f§fPandaDEV §7• §cPlugins §8» §7https://pandadev.net");
         sender.sendMessage("§5Semxo §7• §cLobby §8» §7https://twitch.tv/semxo_tv");
         sender.sendMessage("§aShield-Break.net §7• §cHost §8» §7https://shield-break.net");
         sender.sendMessage("");

@@ -11,7 +11,7 @@ public class WebCommand implements CommandExecutor {
     public boolean onCommand( CommandSender sender,  Command command,  String label,  String[] args) {
         if (args.length != 0) return false;
 
-        sender.sendMessage(Main.prefix + "§7Unsere Webseite §ahttps://r-place.ch");
+        sender.sendMessage(Main.prefix + "§7Our Website §ahttps://r-place.ch");
 
         return false;
     }

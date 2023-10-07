@@ -5,7 +5,6 @@ api-version: 1.19
 commands:
   credits:
   discord:
-  spawn:
   web:
     aliases:
       - website
@@ -18,3 +17,4 @@ commands:
     aliases:
       - randomtp
       - randomteleport
+  toggleworlds:

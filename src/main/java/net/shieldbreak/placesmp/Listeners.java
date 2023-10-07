@@ -4,10 +4,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,6 +14,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.Inventory;
@@ -61,8 +60,7 @@ public class Listeners implements Listener {
     @EventHandler
     public void onJoin(PlayerJoinEvent e) {
         if (!(e.getPlayer().hasPlayedBefore())) {
-            Location loc = new Location(Bukkit.getWorld("world"), 0.5, 137, 0.5);
-            e.getPlayer().teleport(loc);
+            e.getPlayer().teleport(new Location(Bukkit.getWorld("world"), 0.5, 136, 0.5, -90, 0));
             Inventory inv = e.getPlayer().getInventory();
             inv.setItem(0, new ItemStack(Material.STONE_SWORD));
             inv.setItem(1, new ItemStack(Material.STONE_PICKAXE));
@@ -76,13 +74,22 @@ public class Listeners implements Listener {
 
         Player player = e.getPlayer();
 
+        if (Bukkit.getWhitelistedPlayers().contains(player)){e.setJoinMessage(Main.prefix + " §a+ " + e.getPlayer().getName()); return;}
+
         if (!isWhitelisted(player)) {
             e.setJoinMessage("");
             player.kickPlayer("§c§lYou are not whitelisted on this server!\n\n§7You can get whitelisted by joining our discord \nand sending your name into the whitelist channel.\n\n§9discord.r-place.ch");
         } else {
             e.setJoinMessage(Main.prefix + " §a+ " + e.getPlayer().getName());
         }
+    }
 
+    @EventHandler
+    public void onCommand(PlayerCommandPreprocessEvent e){
+        if (e.getMessage().startsWith("/hub") || e.getMessage().startsWith("/lobby") || e.getMessage().startsWith("/l")) {
+            Player player = e.getPlayer();
+            player.teleport(new Location(Bukkit.getWorld("world"), 0.5, 136, 0.5, -90, 0));
+        }
     }
 
     @EventHandler
@@ -103,8 +110,8 @@ public class Listeners implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void playerRespawnEvent(PlayerRespawnEvent e) {
-        e.setRespawnLocation(new Location(Bukkit.getWorld("world"), 0.5, 137, 0.5));
-        e.getPlayer().teleport(new Location(Bukkit.getWorld("world"), 0.5, 137, 0.5));
+        e.setRespawnLocation(new Location(Bukkit.getWorld("world"), 0.5, 137, 0.5, -90, 0));
+        e.getPlayer().teleport(new Location(Bukkit.getWorld("world"), 0.5, 137, 0.5, -90, 0));
     }
 
 
@@ -368,7 +375,7 @@ public class Listeners implements Listener {
                 if (e.getBlockPlaced().getY() == 61) {
 
                     if (delayedPlayers.contains(e.getPlayer())){
-                        e.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§7« §6Du kannst für 5 sekunden keinen block platzieren §7»"));
+                        e.getPlayer().spigot().sendMessage(ChatMessageType.ACTION_BAR, new TextComponent("§cYou can't place another block for §f5 seconds"));
                         e.setCancelled(true);
                         return;
                     }
@@ -400,7 +407,7 @@ public class Listeners implements Listener {
                         });
 
                     } else {
-                    e.getPlayer().sendMessage(Main.getPrefix() + " §cDu darfst diesen Block nicht platzieren!");
+                    e.getPlayer().sendMessage(Main.getPrefix() + " §cYou can't place this block!");
                     e.setCancelled(true);
                     }
                 } else {
@@ -429,6 +436,7 @@ public class Listeners implements Listener {
             e.getPlayer().setFlying(true);
             e.getPlayer().setFlySpeed(0.3F);
         } else {
+            if (e.getPlayer().getGameMode().equals(GameMode.CREATIVE) || e.getPlayer().getGameMode().equals(GameMode.SPECTATOR)) {return;}
             e.getPlayer().setAllowFlight(false);
             e.getPlayer().setFlying(false);
             e.getPlayer().setFlySpeed(0.1F);
@@ -445,6 +453,16 @@ public class Listeners implements Listener {
             }
             if ((player.getWorld().getName().equals("world"))){
                 e.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onTNTExplode(EntityExplodeEvent event) {
+        if (event.getEntityType() == EntityType.PRIMED_TNT || event.getEntityType() == EntityType.MINECART_TNT) {
+            if (event.getLocation().getWorld().getEnvironment() == World.Environment.THE_END) {
+                event.setCancelled(true);
+                event.blockList().clear();
             }
         }
     }
